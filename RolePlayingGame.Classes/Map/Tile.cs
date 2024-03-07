@@ -1,5 +1,7 @@
-﻿namespace RolePlayingGame.Classes.Map;
-public class Tile
+﻿using RolePlayingGame.Classes.Entities;
+
+namespace RolePlayingGame.Classes.Map;
+public class Tile : Entity
 {
-    public string ImagePath { get; set; } = string.Empty;
+
 }
