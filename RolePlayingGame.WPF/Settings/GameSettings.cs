@@ -1,7 +1,7 @@
-﻿namespace RolePlayingGame.WPF;
+﻿namespace RolePlayingGame.WPF.Settings;
 public static class GameSettings
 {
-    public const string ImagesDirectory = @"C:\Users\Jan\source\repos\RolePlayingGame-master\RolePlayingGame.Classes\Images\";
+    public const string ImagesDirectory = @"C:\Users\Jan\source\repos\RolePlayingGame\RolePlayingGame.Classes\Images\";
     public const string HeroImagePath = ImagesDirectory + "hero.png";
 
     public static readonly string[] grassTiles = [ImagesDirectory + "grass1.png",

@@ -1,6 +1,8 @@
 ﻿using RolePlayingGame.Classes.Entities;
 using RolePlayingGame.Classes.Enums;
 using RolePlayingGame.Classes.Map;
+using RolePlayingGame.Classes.Map.Tiles;
+using RolePlayingGame.WPF.Settings;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,14 +12,13 @@ namespace RolePlayingGame.WPF;
 
 public partial class MainWindow : Window
 {
-    private readonly World world = new(GameSettings.WorldSize, GameSettings.TileSize);
+    private World world = new(GameSettings.WorldSize, GameSettings.TileSize);
     private Hero hero = new();
     private Image heroImage = new();
 
     public MainWindow()
     {
         InitializeComponent();
-
         worldCanvas.Width = GameSettings.WorldSize;
         worldCanvas.Height = GameSettings.WorldSize;
 
@@ -34,6 +35,9 @@ public partial class MainWindow : Window
 
     private void MainWindow_KeyDown(object sender, KeyEventArgs e)
     {
+
+        hero.Visible = !hero.Visible;
+
         switch (e.Key)
         {
             case Key.W:
@@ -72,8 +76,7 @@ public partial class MainWindow : Window
                 break;
         }
 
-        if (newPosX >= 0 && newPosX < GameSettings.WorldSize / GameSettings.TileSize
-            && newPosY >= 0 && newPosY < GameSettings.WorldSize / GameSettings.TileSize)
+        if (IsTileWalkable(newPosX, newPosY))
         {
             hero.Move(direction);
             Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
@@ -81,13 +84,25 @@ public partial class MainWindow : Window
         }
     }
 
+    private bool IsTileWalkable(int x, int y)
+    {
+        if (x >= 0 && x < GameSettings.WorldSize / GameSettings.TileSize
+            && y >= 0 && y < GameSettings.WorldSize / GameSettings.TileSize)
+        {
+            Tile newTile = world.Tiles[x, y];
+            return world.Tiles[x, y].Walkable;
+        }
+        return false;
+    }
+
+
     private void DrawHero()
     {
         hero = new Hero()
         {
             Name = "Hero",
-            PositionX = world.GetMiddlePosition(),
-            PositionY = world.GetMiddlePosition(),
+            PositionX = 0,
+            PositionY = 0,
             ImagePath = GameSettings.HeroImagePath
         };
         heroImage = new Image()
@@ -96,6 +111,7 @@ public partial class MainWindow : Window
             Width = GameSettings.TileSize,
             Height = GameSettings.TileSize
         };
+
 
         Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
         Canvas.SetTop(heroImage, hero.PositionY * GameSettings.TileSize);
@@ -107,22 +123,40 @@ public partial class MainWindow : Window
     {
         for (int x = 0; x < GameSettings.WorldSize / GameSettings.TileSize; x++)
         {
+
             for (int y = 0; y < GameSettings.WorldSize / GameSettings.TileSize; y++)
             {
                 Random random = new();
-                Tile grassTile = new() { ImagePath = GameSettings.grassTiles[random.Next(GameSettings.grassTiles.Length)] };
-
-                Image image = new()
+                Grass grassTile = new() { ImagePath = GameSettings.grassTiles[random.Next(2)], PositionX = x, PositionY = y, Walkable = true };
+                world.Tiles[x, y] = grassTile;
+                Image grassTileImage = new()
                 {
                     Source = new BitmapImage(new Uri(grassTile.ImagePath)),
                     Width = GameSettings.TileSize,
                     Height = GameSettings.TileSize
                 };
 
-                Canvas.SetLeft(image, x * GameSettings.TileSize);
-                Canvas.SetTop(image, y * GameSettings.TileSize);
 
-                worldCanvas.Children.Add(image);
+                Canvas.SetLeft(grassTileImage, x * GameSettings.TileSize);
+                Canvas.SetTop(grassTileImage, y * GameSettings.TileSize);
+                worldCanvas.Children.Add(grassTileImage);
+
+                if (random.Next(10) >= 9)
+                {
+                    Tree treeTile = new() { ImagePath = GameSettings.TreeImagePath, PositionX = x, PositionY = y, Walkable = false };
+                    world.Tiles[x, y] = treeTile;
+                    Image treeTileImage = new()
+                    {
+                        Source = new BitmapImage(new Uri(treeTile.ImagePath)),
+                        Width = GameSettings.TileSize,
+                        Height = GameSettings.TileSize
+                    };
+
+                    Canvas.SetLeft(treeTileImage, x * GameSettings.TileSize);
+                    Canvas.SetTop(treeTileImage, y * GameSettings.TileSize);
+                    worldCanvas.Children.Add(treeTileImage);
+                }
+
             }
         }
     }
