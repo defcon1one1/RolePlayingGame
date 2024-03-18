@@ -8,8 +8,4 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\RolePlayingGame.Classes\RolePlayingGame.Classes.csproj" />
-  </ItemGroup>
-
 </Project>

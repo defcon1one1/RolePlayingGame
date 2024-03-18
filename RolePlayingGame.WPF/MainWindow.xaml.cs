@@ -1,6 +1,7 @@
-﻿using RolePlayingGame.Classes.Entities;
-using RolePlayingGame.Classes.Enums;
-using RolePlayingGame.Classes.Map;
+﻿using RolePlayingGame.Classes.Map.Tiles;
+using RolePlayingGame.WPF.Entities;
+using RolePlayingGame.WPF.Enums;
+using RolePlayingGame.WPF.Map;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -78,13 +79,19 @@ public partial class MainWindow : Window
                 newPosX++;
                 break;
         }
-        if (newPosX >= 0 && newPosX < GameSettings.WorldSize / GameSettings.TileSize
-                    && newPosY >= 0 && newPosY < GameSettings.WorldSize / GameSettings.TileSize)
+        if (IsTileWalkable(newPosX, newPosY))
         {
             hero.Move(direction);
             Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
             Canvas.SetTop(heroImage, hero.PositionY * GameSettings.TileSize);
         }
+    }
+
+    private bool IsTileWalkable(int newPosX, int newPosY)
+    {
+        return (newPosX >= 0 && newPosX < GameSettings.WorldSize / GameSettings.TileSize
+            && newPosY >= 0 && newPosY < GameSettings.WorldSize / GameSettings.TileSize
+            && world.Tiles[newPosX, newPosY].Walkable);
     }
 
     private void DrawHero()
@@ -116,7 +123,9 @@ public partial class MainWindow : Window
             for (int y = 0; y < GameSettings.WorldSize / GameSettings.TileSize; y++)
             {
                 Random random = new();
-                Tile grassTile = new() { ImagePath = GameSettings.grassTiles[random.Next(GameSettings.grassTiles.Length)] };
+                Grass grassTile = new() { ImagePath = GameSettings.grassTiles[random.Next(GameSettings.grassTiles.Length)] };
+                world.Tiles[x, y] = grassTile;
+
 
                 Image image = new()
                 {
@@ -129,17 +138,19 @@ public partial class MainWindow : Window
 
                 worldCanvas.Children.Add(image);
 
-                Tile treeTile = new() { ImagePath = GameSettings.TreeImagePath };
 
-                Image treeImage = new()
-                {
-                    Source = new BitmapImage(new Uri(treeTile.ImagePath)),
-                    Width = GameSettings.TileSize,
-                    Height = GameSettings.TileSize
-                };
 
                 if (random.Next(100) > 95)
                 {
+                    Tree treeTile = new() { ImagePath = GameSettings.TreeImagePath };
+                    world.Tiles[x, y] = treeTile;
+
+                    Image treeImage = new()
+                    {
+                        Source = new BitmapImage(new Uri(treeTile.ImagePath)),
+                        Width = GameSettings.TileSize,
+                        Height = GameSettings.TileSize
+                    };
                     Canvas.SetLeft(treeImage, x * GameSettings.TileSize);
                     Canvas.SetTop(treeImage, y * GameSettings.TileSize);
 
