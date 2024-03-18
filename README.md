@@ -1,4 +1,4 @@
 # How to run
 
-## 1. Clone repository and launch
-## 2. In `RolePlayingGame.WPF.GameSettings.cs` adjust `ImagesDirectory` path properly.
+1. Clone repository
+2. In `GameSettings.cs` adjust `ImagesDirectory` path accordingly.
