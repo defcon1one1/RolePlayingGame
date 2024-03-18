@@ -3,10 +3,8 @@ using RolePlayingGame.Classes.Interfaces;
 
 namespace RolePlayingGame.Classes.Entities;
 
-public class Hero : Entity, ITargetable, IMovable
+public class Hero : Entity
 {
-    public string ImagePath { get; set; } = string.Empty;
-
     public void Move(Direction direction)
     {
         switch (direction)
@@ -24,11 +22,5 @@ public class Hero : Entity, ITargetable, IMovable
                 PositionY++;
                 break;
         }
-    }
-
-    public int TakeDamage(int damage)
-    {
-        HealthPoints -= damage;
-        return damage;
     }
 }
