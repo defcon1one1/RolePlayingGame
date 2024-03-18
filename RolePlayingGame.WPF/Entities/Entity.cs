@@ -1,4 +1,7 @@
-﻿namespace RolePlayingGame.WPF.Entities;
+﻿using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+
+namespace RolePlayingGame.WPF.Entities;
 
 public class Entity
 {
@@ -7,4 +10,15 @@ public class Entity
     public int PositionX { get; set; }
     public int PositionY { get; set; }
     public bool Visible { get; set; }
+
+    public Image Draw()
+    {
+        Image image = new()
+        {
+            Source = new BitmapImage(new Uri(ImagePath)),
+            Width = GameSettings.TileSize,
+            Height = GameSettings.TileSize,
+        };
+        return image;
+    }
 }
