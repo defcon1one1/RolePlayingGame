@@ -100,6 +100,7 @@ public partial class MainWindow : Window
             Name = "Hero",
             PositionX = world.GetMiddlePosition(),
             PositionY = world.GetMiddlePosition(),
+            ImagePath = GameSettings.HeroImagePath
         };
 
         heroImage = hero.Draw();
