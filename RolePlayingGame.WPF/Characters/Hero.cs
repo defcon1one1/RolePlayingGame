@@ -1,6 +1,7 @@
-﻿using RolePlayingGame.WPF.Enums;
+﻿using RolePlayingGame.WPF.Entities;
+using RolePlayingGame.WPF.Enums;
 
-namespace RolePlayingGame.WPF.Entities;
+namespace RolePlayingGame.WPF.Characters;
 
 public class Hero : Entity
 {

@@ -1,5 +1,5 @@
 ﻿using RolePlayingGame.Classes.Map.Tiles;
-using RolePlayingGame.WPF.Entities;
+using RolePlayingGame.WPF.Characters;
 using RolePlayingGame.WPF.Enums;
 using RolePlayingGame.WPF.Map;
 using System.Windows;
@@ -104,11 +104,7 @@ public partial class MainWindow : Window
         };
 
         heroImage = hero.Draw();
-
-        Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
-        Canvas.SetTop(heroImage, hero.PositionY * GameSettings.TileSize);
-
-        worldCanvas.Children.Add(heroImage);
+        AddToCanvas(hero.PositionX, hero.PositionY, heroImage);
     }
 
     private void DrawBackground()
@@ -123,10 +119,7 @@ public partial class MainWindow : Window
 
                 Image grassImage = grassTile.Draw();
 
-                Canvas.SetLeft(grassImage, x * GameSettings.TileSize);
-                Canvas.SetTop(grassImage, y * GameSettings.TileSize);
-
-                worldCanvas.Children.Add(grassImage);
+                AddToCanvas(x, y, grassImage);
 
                 if (random.Next(100) > 95)
                 {
@@ -134,12 +127,16 @@ public partial class MainWindow : Window
                     world.Tiles[x, y] = treeTile;
 
                     Image treeImage = treeTile.Draw();
-                    Canvas.SetLeft(treeImage, x * GameSettings.TileSize);
-                    Canvas.SetTop(treeImage, y * GameSettings.TileSize);
-
-                    worldCanvas.Children.Add(treeImage);
+                    AddToCanvas(x, y, treeImage);
                 }
             }
         }
+    }
+
+    private void AddToCanvas(int x, int y, Image image)
+    {
+        Canvas.SetLeft(image, x * GameSettings.TileSize);
+        Canvas.SetTop(image, y * GameSettings.TileSize);
+        worldCanvas.Children.Add(image);
     }
 }
