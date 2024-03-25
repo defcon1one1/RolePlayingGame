@@ -6,7 +6,6 @@ public static class GameSettings
     public const string HeroImagePath = ImagesDirectory + "hero.png";
     public const string EnemyImagePath = ImagesDirectory + "enemy.png";
 
-
     public readonly static string[] grassTiles = [ImagesDirectory + "grass1.png",
         ImagesDirectory + "grass2.png",
         ImagesDirectory + "grass3.png"];

@@ -13,6 +13,7 @@ public partial class MainWindow : Window
     private readonly World world;
     private Hero hero;
     private Image heroImage;
+    private NPC enemyNpc;
 
     public MainWindow()
     {
@@ -24,6 +25,7 @@ public partial class MainWindow : Window
 
         DrawBackground();
         DrawHero();
+        DrawEnemy();
 
         KeyDown += MainWindow_KeyDown;
     }
@@ -78,12 +80,24 @@ public partial class MainWindow : Window
                 newPosX++;
                 break;
         }
+
         if (IsTileWalkable(newPosX, newPosY))
         {
             hero.Move(direction);
             Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
             Canvas.SetTop(heroImage, hero.PositionY * GameSettings.TileSize);
         }
+
+        if (IsEnemyOnTile(enemyNpc.PositionX, enemyNpc.PositionY))
+        {
+            FightWindow fightWindow = new();
+            fightWindow.ShowDialog();
+        }
+    }
+
+    private bool IsEnemyOnTile(int enemyPosX, int enemyPosY)
+    {
+        return hero.PositionX == enemyPosX && hero.PositionY == enemyPosY;
     }
 
     private bool IsTileWalkable(int newPosX, int newPosY)
@@ -105,6 +119,19 @@ public partial class MainWindow : Window
 
         heroImage = hero.Draw();
         AddToCanvas(hero.PositionX, hero.PositionY, heroImage);
+    }
+
+    private void DrawEnemy()
+    {
+        enemyNpc = new()
+        {
+            Name = "Enemy",
+            PositionX = world.GetMiddlePosition(),
+            PositionY = 0,
+            ImagePath = GameSettings.EnemyImagePath
+        };
+        Image enemyImage = enemyNpc.Draw();
+        AddToCanvas(enemyNpc.PositionX, enemyNpc.PositionY, enemyImage);
     }
 
     private void DrawBackground()
