@@ -1,10 +1,11 @@
 ﻿using RolePlayingGame.Classes.Map.Tiles;
-using RolePlayingGame.WPF.Entities;
+using RolePlayingGame.WPF.Characters;
 using RolePlayingGame.WPF.Enums;
 using RolePlayingGame.WPF.Map;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Image = System.Windows.Controls.Image;
 
 namespace RolePlayingGame.WPF;
 
@@ -78,11 +79,11 @@ public partial class MainWindow : Window
                 newPosX++;
                 break;
         }
+
         if (IsTileWalkable(newPosX, newPosY))
         {
             hero.Move(direction);
-            Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
-            Canvas.SetTop(heroImage, hero.PositionY * GameSettings.TileSize);
+            MoveOnCanvas(heroImage, newPosX, newPosY);
         }
     }
 
@@ -104,11 +105,7 @@ public partial class MainWindow : Window
         };
 
         heroImage = hero.Draw();
-
-        Canvas.SetLeft(heroImage, hero.PositionX * GameSettings.TileSize);
-        Canvas.SetTop(heroImage, hero.PositionY * GameSettings.TileSize);
-
-        worldCanvas.Children.Add(heroImage);
+        AddToCanvas(heroImage, hero.PositionX, hero.PositionY, worldCanvas);
     }
 
     private void DrawBackground()
@@ -122,11 +119,7 @@ public partial class MainWindow : Window
                 world.Tiles[x, y] = grassTile;
 
                 Image grassImage = grassTile.Draw();
-
-                Canvas.SetLeft(grassImage, x * GameSettings.TileSize);
-                Canvas.SetTop(grassImage, y * GameSettings.TileSize);
-
-                worldCanvas.Children.Add(grassImage);
+                AddToCanvas(grassImage, x, y, worldCanvas);
 
                 if (random.Next(100) > 95)
                 {
@@ -134,12 +127,20 @@ public partial class MainWindow : Window
                     world.Tiles[x, y] = treeTile;
 
                     Image treeImage = treeTile.Draw();
-                    Canvas.SetLeft(treeImage, x * GameSettings.TileSize);
-                    Canvas.SetTop(treeImage, y * GameSettings.TileSize);
-
-                    worldCanvas.Children.Add(treeImage);
+                    AddToCanvas(treeImage, x, y, worldCanvas);
                 }
             }
         }
+    }
+    private static void AddToCanvas(Image image, int posX, int posY, Canvas worldCanvas)
+    {
+        Canvas.SetLeft(image, posX * GameSettings.TileSize);
+        Canvas.SetTop(image, posY * GameSettings.TileSize);
+        worldCanvas.Children.Add(image);
+    }
+    private static void MoveOnCanvas(Image image, int posX, int posY)
+    {
+        Canvas.SetLeft(image, posX * GameSettings.TileSize);
+        Canvas.SetTop(image, posY * GameSettings.TileSize);
     }
 }
